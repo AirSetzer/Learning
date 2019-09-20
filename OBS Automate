@@ -1,0 +1,28 @@
+import time, shutil
+from pathlib import Path
+
+# Generates the unique name from a timestamp
+dt = time.strftime("%d-%m-%Y %H.%M.%S")
+dst = f'OBS_{dt}'
+
+# Directories
+desktop = Path.home() / 'Desktop'
+output_source = desktop / 'OUTPUT'
+output_dest = output_source / 'new'
+usb = Path('E:')
+backup = Path('C:/OBS Video Backup/')
+
+if not output_dest.exists():
+    output_dest.mkdir()
+
+# Move files into 'new'
+for item in output_source.iterdir():
+    if item.is_file():
+        item.rename(output_dest / item.name)
+
+# Copy the NEW folder to the USB & BACKUP folders
+shutil.copytree(output_dest, usb / dst)
+shutil.copytree(output_dest, backup / dst)
+
+# Delete the original NEW folder from OUTPUT folder
+shutil.rmtree(output_dest)
