@@ -1,0 +1,33 @@
+from tkinter import *
+from PIL import Image, ImageTk      # pip install Pillow
+
+
+root=Tk()
+root.geometry('1920x1080')
+root.title('Preparing')
+root.attributes('-fullscreen', True)
+
+imge=Image.open('C:/Python/OBS1.png')
+photo=ImageTk.PhotoImage(imge)
+
+lab=Label (image=photo)
+lab.pack()
+
+root.after(5000, root.destroy)
+
+root.mainloop()
+
+root2=Tk()
+root2.geometry('1920x1080')
+root2.title('Preparing')
+root2.attributes('-fullscreen', True)
+
+imge2=Image.open('C:/Python/OBS2.png')
+photo2=ImageTk.PhotoImage(imge2)
+
+lab2=Label (image=photo2)
+lab2.pack()
+
+root2.after(5000, root2.destroy)
+
+root2.mainloop()
