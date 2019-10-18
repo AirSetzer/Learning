@@ -18,10 +18,6 @@ backup = Path('C:/OBS Video Backup/')
 if not output_dest.exists():
     output_dest.mkdir()
 
-imge=Image.open('C:/Python/OBS1.png')
-photo=ImageTk.PhotoImage(imge)
-imge2=Image.open('C:/Python/OBS2.png')
-photo2=ImageTk.PhotoImage(imge2)
 
 # defines second popup image for tkinter
 def new_image():
@@ -32,9 +28,9 @@ def new_image():
 
 
 # starts displaying images
-root=Tk()
+root = Tk()
 root.title('Preparing')
-root.attributes('-fullscreen', True)
+# root.attributes('-fullscreen', True)
 
 
 # allows file manipulation to happen in background
@@ -48,18 +44,21 @@ class Worker(threading.Thread):
         shutil.copytree(output_dest, usb / dst)
         # Copy the NEW folder to the BACKUP folder
         shutil.copytree(output_dest, backup / dst)
-w=Worker()
+w = Worker()
 w.start()
 
 
+imge = Image.open('C:/Python/1.png')
+photo = ImageTk.PhotoImage(imge)
+imge2 = Image.open('C:/Python/2.png')
+photo2 = ImageTk.PhotoImage(imge2)
 
-# Display image 1, then run new_image to display image2
-lab=Label(image=photo)
+lab = Label(image=photo)
 lab.pack()
-root.after(45000, new_image)
+root.after(5000, new_image)
 root.mainloop()
 
 
 # Delete the original NEW folder from OUTPUT folder
-time.sleep(2)
+time.sleep(30)
 shutil.rmtree(output_dest)
