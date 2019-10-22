@@ -1,11 +1,11 @@
-import time, shutil, threading
+import time, shutil, threading, os
 from pathlib import Path
 from tkinter import *
 from PIL import Image, ImageTk
 
 
 # Generates the unique name from a timestamp
-dt = time.strftime("%d-%m-%Y %H.%M.%S")
+dt = time.strftime("%m-%d-%Y %H.%M.%S")
 dst = f'OBS_{dt}'
 
 
@@ -19,7 +19,7 @@ if not output_dest.exists():
     output_dest.mkdir()
 
 
-# defines second popup image for tkinter
+# defines function for second popup image
 def new_image():
     global lab, photo2
     lab.configure(image=photo2)
@@ -40,10 +40,10 @@ class Worker(threading.Thread):
         for item in output_source.iterdir():
             if item.is_file():
                 item.rename(output_dest / item.name)
-        # Copy the NEW folder to the USB folder
-        shutil.copytree(output_dest, usb / dst)
         # Copy the NEW folder to the BACKUP folder
         shutil.copytree(output_dest, backup / dst)
+        # Copy the NEW folder to the USB folder
+        shutil.copytree(output_dest, usb / dst)
 w = Worker()
 w.start()
 
@@ -53,12 +53,18 @@ photo = ImageTk.PhotoImage(imge)
 imge2 = Image.open('C:/Python/2.png')
 photo2 = ImageTk.PhotoImage(imge2)
 
+# starts displaying images
 lab = Label(image=photo)
 lab.pack()
-root.after(5000, new_image)
+# after set time run function that changes image
+root.after(1100000, new_image)
 root.mainloop()
 
 
 # Delete the original NEW folder from OUTPUT folder
-time.sleep(30)
 shutil.rmtree(output_dest)
+
+# relaunch recording software
+filepath = 'C:\Program Files (x86)\etc.exe'
+time.sleep(3)
+os.startfile(filepath)
