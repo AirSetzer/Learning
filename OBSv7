@@ -1,0 +1,78 @@
+import time, shutil, threading, os
+from pathlib import Path
+from tkinter import *
+from PIL import Image, ImageTk
+
+
+# Generates the unique name from a timestamp
+dt = time.strftime("%m-%d-%Y %H.%M.%S")
+dst = f'OBS_{dt}'
+
+
+# Directories
+desktop = Path.home() / 'Desktop'
+output_source = desktop / 'OUTPUT'
+output_dest = output_source / 'new'
+usb = Path('E:')
+backup = Path('C:/OBS Video Backup/')
+if not output_dest.exists():
+    output_dest.mkdir()
+
+# defines function for second popup image
+def new_image():
+    global lab, photo2
+    lab.configure(image=photo2)
+    lab.update()
+    root.after(25000, new_image2())
+
+# defines function for second popup image
+def new_image2():
+    global lab, photo3
+    lab.configure(image=photo3)
+    lab.update()
+    root.after(25000, root.destroy)
+
+
+# frame for displaying images
+root = Tk()
+root.title('Preparing')
+root.attributes('-fullscreen', True)
+
+
+# allows file manipulation to happen in background
+class Worker(threading.Thread):
+    def run(self):
+        # Move files into 'new'
+        for item in output_source.iterdir():
+            if item.is_file():
+                item.rename(output_dest / item.name)
+        # Copy the NEW folder to the BACKUP folder
+        shutil.copytree(output_dest, backup / dst)
+        # Copy the NEW folder to the USB folder
+        shutil.copytree(output_dest, usb / dst)
+w = Worker()
+w.start()
+
+
+imge = Image.open('C:/Python/OBS1.png')
+photo = ImageTk.PhotoImage(imge)
+imge2 = Image.open('C:/Python/OBS2.png')
+photo2 = ImageTk.PhotoImage(imge2)
+imge3 = Image.open('C:/Python/OBS3.png')
+photo3 = ImageTk.PhotoImage(imge3)
+
+# display work in progress image
+lab = Label(image=photo)
+lab.pack()
+# after set time run function that changes to complete image
+root.after(60000, new_image)
+root.mainloop()
+
+
+# Delete the original NEW folder from OUTPUT folder
+shutil.rmtree(output_dest)
+
+# relaunch recording software
+filepath = 'C:\Program Files\Blackmagic Design\Media Express\MediaExpress.exe'
+time.sleep(1)
+os.startfile(filepath)
