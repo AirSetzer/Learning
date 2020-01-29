@@ -18,19 +18,25 @@ backup = Path('C:/OBS Video Backup/')
 if not output_dest.exists():
     output_dest.mkdir()
 
-
 # defines function for second popup image
 def new_image():
     global lab, photo2
     lab.configure(image=photo2)
     lab.update()
-    root.after(15000, root.destroy)
+    root.after(25000, new_image2())
+
+# defines function for second popup image
+def new_image2():
+    global lab, photo3
+    lab.configure(image=photo3)
+    lab.update()
+    root.after(25000, root.destroy)
 
 
-# starts displaying images
+# frame for displaying images
 root = Tk()
 root.title('Preparing')
-# root.attributes('-fullscreen', True)
+root.attributes('-fullscreen', True)
 
 
 # allows file manipulation to happen in background
@@ -48,16 +54,18 @@ w = Worker()
 w.start()
 
 
-imge = Image.open('C:/Python/1.png')
+imge = Image.open('C:/Python/OBS1.png')
 photo = ImageTk.PhotoImage(imge)
-imge2 = Image.open('C:/Python/2.png')
+imge2 = Image.open('C:/Python/OBS2.png')
 photo2 = ImageTk.PhotoImage(imge2)
+imge3 = Image.open('C:/Python/OBS3.png')
+photo3 = ImageTk.PhotoImage(imge3)
 
-# starts displaying images
+# display work in progress image
 lab = Label(image=photo)
 lab.pack()
-# after set time run function that changes image
-root.after(1100000, new_image)
+# after set time run function that changes to complete image
+root.after(60000, new_image)
 root.mainloop()
 
 
@@ -65,6 +73,6 @@ root.mainloop()
 shutil.rmtree(output_dest)
 
 # relaunch recording software
-filepath = 'C:\Program Files (x86)\etc.exe'
-time.sleep(3)
+filepath = 'C:\Program Files\Blackmagic Design\Media Express\MediaExpress.exe'
+time.sleep(1)
 os.startfile(filepath)
